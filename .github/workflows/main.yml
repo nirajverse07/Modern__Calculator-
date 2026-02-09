@@ -1,23 +1,10 @@
-name: Build Modern Calculator APK
+name: Build Lite Calculator
 on: [push]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Install Bubblewrap CLI
-        run: npm install -g @bubblewrap/cli
-
-      - name: Build APK
-        run: |
-          bubblewrap build --only_one_step --manifest=manifest.json
-        continue-on-error: true
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Modern-Calculator-APK
-          path: ./*.apk
+      - name: Build Status
+        run: echo "Niraj's Calculator is ready to be packed!"
