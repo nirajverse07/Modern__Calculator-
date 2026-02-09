@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modern Calculator</title>
+
+  <link rel="manifest" href="manifest.json">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", sans-serif;
+      background:#0f0f12;
+      overflow: hidden; 
+    }
+
+    .calc {
+      background: #1D1C20;
+      border-radius: 24px;
+      padding: 22px;
+      width: 92vw;
+      max-width: 380px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.7);
+      transform: scale(1.1);
+    }
+
+    input {
+      height: 90px;
+      border-radius: 12px;
+      width: 100%;
+      margin-bottom: 18px;
+      padding: 25px;
+      box-sizing: border-box;
+      border:none;
+      text-align: right;
+      font-size: 54px;
+      background: transparent;
+      color: white;
+      white-space:nowrap;
+      overflow: hidden;
+      outline: none; 
+    }
+
+    .btns {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    button {
+      height: 75px;
+      width: 75px;
+      border-radius: 50%;
+      background: #1D1C20;
+      color: white;
+      border: none;
+      font-size: 22px;
+      box-shadow: -4px -4px 8px rgba(255,255,255,0.08), 6px 6px 12px rgba(0,0,0,0.6);
+      
+      /* Mobile Fixes */
+      -webkit-tap-highlight-color: transparent; 
+      outline: none;
+      cursor: default;
+      transition: all 0.2s ease;
+    }
+
+    /* 🔥 Hover ki jagah Active Glow (Mobile Friendly) */
+    button:active {
+      box-shadow: 0px 0px 15px rgba(0, 255, 144, 0.6);
+      border: 1px solid #00ff90;
+      transform: scale(0.92);
+    }
+
+    .equal:active {
+      box-shadow: 0px 0px 15px rgba(255, 152, 0, 0.6);
+      border: 1px solid #ff9800;
+    }
+
+    .add { color: #00ff90; font-size: 30px; }
+    .clear { color: #00ff90; }
+    .equal { background:#ff9800; color:black; font-weight:bold; }
+
+  </style>
+</head>
+
+<body>
+  <div class="calc">
+    <input type="text" id="res" readonly>
+
+    <div class="btns">
+      <button class="clear" onclick="clearAll()">AC</button>
+      <button class="clear" onclick="del()">DEL</button>
+      <button class="clear" onclick="press('%')">%</button>
+      <button class="add" onclick="press('/')">/</button>
+
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button class="add" onclick="press('*')">*</button>
+
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button class="add" onclick="press('-')">-</button>
+
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button class="add" onclick="press('+')">+</button>
+
+      <button onclick="press('00')">00</button>
+      <button onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+      <button class="equal" onclick="calc()">=</button>
+    </div>
+  </div>
+
+<script>
+  const res = document.getElementById("res");
+
+  // BACK BUTTON LOGIC (Isse app back button se cut hoga)
+  document.addEventListener("backbutton", function(e) {
+      e.preventDefault();
+      if (confirm("Kya aap Calculator band karna chahte hain?")) {
+          navigator.app.exitApp();
+      }
+  }, false);
+
+  function adjustFontSize() {
+    const maxFont = 54;
+    const minFont = 22;
+    let length = res.value.length;
+    let newSize = maxFont - (length * 2);
+    if (newSize < minFont) newSize = minFont;
+    res.style.fontSize = newSize + "px";
+  }
+
+  function press(val){
+    res.value += val;
+    adjustFontSize();
+  }
+
+  function clearAll(){
+    res.value = "";
+    adjustFontSize();
+  }
+
+  function del(){
+    res.value = res.value.slice(0, -1);
+    adjustFontSize();
+  }
+
+  function calc(){
+    try{
+      let exp = res.value.replace(/%/g, '/100');
+      res.value = eval(exp);
+      adjustFontSize();
+    }catch{
+      res.value = "Error";
+      adjustFontSize();
+    }
+  }
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
+</body>
+</html>
