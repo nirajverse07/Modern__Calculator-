@@ -1,8 +1,23 @@
-name: Test Build
+name: Build Modern Calculator APK
 on: [push]
+
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "Build testing for Niraj's Calculator"
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli
+
+      - name: Build APK
+        run: |
+          bubblewrap build --only_one_step --manifest=manifest.json
+        continue-on-error: true
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Modern-Calculator-APK
+          path: ./*.apk
